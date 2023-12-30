@@ -6,8 +6,8 @@ pipeline{
 
     environment {
             BUILD_VERSION = ""
-            IMAGE = script: 'cat package.json | jq -r ".version + \" \" + .name"', returnStatus: true, trim: true
-            VERSION = script: 'cat package.json | jq -r .version', returnStatus: true, trim: true
+            IMAGE = script: 'cat spatch-frontend/package.json | jq -r ".version + \" \" + .name"', returnStatus: true, trim: true
+            VERSION = script: 'cat spatch-frontend/package.json | jq -r .version', returnStatus: true, trim: true
         }
 
     stages {
@@ -26,7 +26,9 @@ pipeline{
             steps {
                 script {
                     // Build Docker image and tag it with the build version
-                    docker.build("undefined/spatch-frontend:${BUILD_VERSION}", ".")
+                    dir('spatch-frontend'){
+                        docker.build("undefined/spatch-frontend/:${BUILD_VERSION}", ".")
+                    }
                 }
             }
         }
