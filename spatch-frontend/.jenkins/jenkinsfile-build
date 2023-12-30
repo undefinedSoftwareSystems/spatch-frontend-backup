@@ -26,9 +26,7 @@ pipeline{
             steps {
                 script {
                     // Build Docker image and tag it with the build version
-                    dir('spatch-frontend'){
-                        docker.build("undefined/spatch-frontend/:${BUILD_VERSION}", ".")
-                    }
+                    docker.build("undefined/spatch-frontend/:${BUILD_VERSION}", "-f spatch-frontend/dockerfile spatch-frontend")                    
                 }
             }
         }
