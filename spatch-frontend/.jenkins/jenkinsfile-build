@@ -1,0 +1,44 @@
+pipeline{
+    agent any
+    tools {
+        dockerTool 'docker'
+    }
+
+    environment {
+            BUILD_VERSION = ""
+            IMAGE = script: 'cat package.json | jq -r ".version + \" \" + .name"', returnStatus: true, trim: true
+            VERSION = script: 'cat package.json | jq -r .version', returnStatus: true, trim: true
+        }
+
+    stages {
+        stage('Read Pom Version') {
+            steps {
+                script {
+                       BUILD_VERSION = "${VERSION}-${BUILD_NUMBER}"
+                       echo "build Version: ${BUILD_VERSION}"
+                       echo "version Version: ${VERSION}"
+                       echo "image: ${IMAGE}"
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build Docker image and tag it with the build version
+                    docker.build("undefined/spatch-frontend:${BUILD_VERSION}", ".")
+                }
+            }
+        }
+
+        stage('Push to Docker Registry') {
+            steps {
+                script {
+                    docker.withRegistry('http://192.168.1.29:5005') {
+                        docker.image("undefined/spatch-frontend:${BUILD_VERSION}").push()
+                    }
+                }
+            }
+        }
+     }
+}
