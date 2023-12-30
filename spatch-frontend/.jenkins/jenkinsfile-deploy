@@ -28,7 +28,7 @@ pipeline {
                     // Adjust the path to your Docker Compose files as needed
                     def composeFile = params.DEPLOY_ENV == 'dev' ? 'docker-compose-dev.yml' : 'docker-compose-prod.yml'
 
-                    sh "cd .docker && docker-compose -f ${composeFile} up -d"
+                    sh "cd .docker && docker-compose -f spatch-frontend/.docker/${composeFile} up -d"
                 }
             }
         }
