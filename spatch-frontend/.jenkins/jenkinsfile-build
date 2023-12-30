@@ -5,9 +5,9 @@ pipeline{
     }
 
     environment {
-            BUILD_VERSION = ""
-            IMAGE = "spatch-frontend"
-            VERSION = "1.0.0"
+            BUILD_VERSION = ''
+            IMAGE = 'spatch-frontend'
+            VERSION = '1.0.0'
         }
 
     stages {
